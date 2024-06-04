@@ -67,28 +67,35 @@ async function run() {
       const result = await sellerAdCollection.insertOne(sellerAdd);
       res.send(result);
     });
-  
+
     // admin confirmation for ad
-    app.patch('/sellerAdds/admin/:id',async(req,res)=>{
+    app.patch("/sellerAdds/admin/:id", async (req, res) => {
       // console.log(req.params.id);
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)};
-      
+      const query = { _id: new ObjectId(id) };
       const update = {
         $set: {
-          status: 'confirmed'
-        }
-      }
-      const result = await sellerAdCollection.updateOne(query,update);
+          status: "confirmed",
+        },
+      };
+      const result = await sellerAdCollection.updateOne(query, update);
       res.send(result);
       // console.log(result);
-       
-    })
-
-
-
-
-
+    });
+    // admin remove for ad
+    app.patch("/sellerAddsRemove/admin/:id", async (req, res) => {
+      // console.log(req.params.id);
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const update = {
+        $set: {
+          status: "",
+        },
+      };
+      const result = await sellerAdCollection.updateOne(query, update);
+      res.send(result);
+      // console.log(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
