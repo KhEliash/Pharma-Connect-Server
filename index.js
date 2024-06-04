@@ -31,17 +31,26 @@ async function run() {
     // await client.connect();
 
     const userCollection = client.db("PharmaConnect").collection("users");
+    const sellerAdCollection = client.db("PharmaConnect").collection("sellerAd");
 
-    app.post('/users',async(req,res)=>{
-        const user = req.body;
-        console.log(user);
-        const query = {email:user.email}
-        const  existingUser = await userCollection.findOne(query);
-        if(existingUser){
-          return res.send("User already exists")
-        }
-        const result = await userCollection.insertOne(user);
-         res.send(result)
+    // User data post
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const query = { email: user.email };
+      const existingUser = await userCollection.findOne(query);
+      if (existingUser) {
+        return res.send("User already exists");
+      }
+      const result = await userCollection.insertOne(user);
+      res.send(result);
+    });
+
+    // seller add data post
+    app.post('/sellerAdds',async (req,res)=>{
+      const sellerAdd = req.body;
+      console.log(sellerAdd);
+      const result = await sellerAdCollection.insertOne(sellerAdd);
+      res.send(result);
     })
 
 
