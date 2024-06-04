@@ -45,10 +45,16 @@ async function run() {
       res.send(result);
     });
 
-    // seller add data post
+    // seller advertise data 
+    app.get('/sellerAdds/:email', async(req,res)=>{
+      // console.log(req.params);
+      const query = {email: req.params.email}
+      const sellerAd = await sellerAdCollection.find(query).toArray();
+      res.send(sellerAd);
+    })
     app.post('/sellerAdds',async (req,res)=>{
       const sellerAdd = req.body;
-      console.log(sellerAdd);
+      // console.log(sellerAdd);
       const result = await sellerAdCollection.insertOne(sellerAdd);
       res.send(result);
     })
