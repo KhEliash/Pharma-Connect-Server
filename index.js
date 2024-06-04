@@ -52,6 +52,13 @@ async function run() {
       const sellerAd = await sellerAdCollection.find(query).toArray();
       res.send(sellerAd);
     })
+    // get ad data for admin
+    app.get('/sellerAdds', async(req,res)=>{
+      const sellerAd = await sellerAdCollection.find().toArray();
+      // console.log(sellerAd);
+      res.send(sellerAd);
+    })
+   
     app.post('/sellerAdds',async (req,res)=>{
       const sellerAdd = req.body;
       // console.log(sellerAdd);
