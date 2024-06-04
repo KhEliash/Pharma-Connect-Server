@@ -13,7 +13,7 @@ app.use(
 );
 app.use(express.json());
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.xzzvi9v.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -31,7 +31,9 @@ async function run() {
     // await client.connect();
 
     const userCollection = client.db("PharmaConnect").collection("users");
-    const sellerAdCollection = client.db("PharmaConnect").collection("sellerAd");
+    const sellerAdCollection = client
+      .db("PharmaConnect")
+      .collection("sellerAd");
 
     // User data post
     app.post("/users", async (req, res) => {
@@ -45,26 +47,47 @@ async function run() {
       res.send(result);
     });
 
-    // seller advertise data 
-    app.get('/sellerAdds/:email', async(req,res)=>{
+    // seller advertise data
+    app.get("/sellerAdds/:email", async (req, res) => {
       // console.log(req.params);
-      const query = {email: req.params.email}
+      const query = { email: req.params.email };
       const sellerAd = await sellerAdCollection.find(query).toArray();
       res.send(sellerAd);
-    })
+    });
     // get ad data for admin
-    app.get('/sellerAdds', async(req,res)=>{
+    app.get("/sellerAdds", async (req, res) => {
       const sellerAd = await sellerAdCollection.find().toArray();
       // console.log(sellerAd);
       res.send(sellerAd);
-    })
-   
-    app.post('/sellerAdds',async (req,res)=>{
+    });
+
+    app.post("/sellerAdds", async (req, res) => {
       const sellerAdd = req.body;
       // console.log(sellerAdd);
       const result = await sellerAdCollection.insertOne(sellerAdd);
       res.send(result);
+    });
+  
+    // admin confirmation for ad
+    app.patch('/sellerAdds/admin/:id',async(req,res)=>{
+      // console.log(req.params.id);
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      
+      const update = {
+        $set: {
+          status: 'confirmed'
+        }
+      }
+      const result = await sellerAdCollection.updateOne(query,update);
+      res.send(result);
+      // console.log(result);
+       
     })
+
+
+
+
 
 
     // Send a ping to confirm a successful connection
