@@ -61,6 +61,13 @@ async function run() {
       res.send(sellerAd);
     });
 
+    // get ad data for banner
+    app.get("/bannerAdds/:status", async (req, res) => {
+      const query = { status: req.params.status };
+      const sellerAd = await sellerAdCollection.find(query).toArray();
+      res.send(sellerAd);
+    });
+
     app.post("/sellerAdds", async (req, res) => {
       const sellerAdd = req.body;
       // console.log(sellerAdd);
