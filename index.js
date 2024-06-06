@@ -31,6 +31,7 @@ async function run() {
     // await client.connect();
 
     const userCollection = client.db("PharmaConnect").collection("users");
+    const categoryCollection = client.db("PharmaConnect").collection("category");
     const sellerAdCollection = client
       .db("PharmaConnect")
       .collection("sellerAd");
@@ -70,10 +71,29 @@ async function run() {
 
     app.post("/sellerAdds", async (req, res) => {
       const sellerAdd = req.body;
-      // console.log(sellerAdd);
       const result = await sellerAdCollection.insertOne(sellerAdd);
       res.send(result);
     });
+
+    // add category
+    app.post("/category", async (req, res) => {
+      const category = req.body;
+      const result = await categoryCollection.insertOne(category);
+      res.send(result);
+    });
+    // get category
+    app.get("/category", async (req, res) => {
+      const category = await categoryCollection.find().toArray();
+      // console.log(category);
+      res.send(category);
+    });
+   
+
+
+
+
+
+
 
     // admin confirmation for ad
     app.patch("/sellerAdds/admin/:id", async (req, res) => {
