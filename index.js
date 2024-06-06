@@ -101,7 +101,14 @@ async function run() {
       const result = await categoryCollection.updateOne(query, update);    
       res.send(result);
     });
-  
+  // delete category
+  app.delete("/category/:id", async (req, res) => {
+    const id = req.params.id;
+    const query = { _id: new ObjectId(id) };
+    const result = await categoryCollection.deleteOne(query);
+    res.send(result);
+  });
+ 
     
 
 
