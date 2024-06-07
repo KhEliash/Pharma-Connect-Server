@@ -31,7 +31,12 @@ async function run() {
     // await client.connect();
 
     const userCollection = client.db("PharmaConnect").collection("users");
-    const categoryCollection = client.db("PharmaConnect").collection("category");
+    const medicineCollection = client
+      .db("PharmaConnect")
+      .collection("medicines");
+    const categoryCollection = client
+      .db("PharmaConnect")
+      .collection("category");
     const sellerAdCollection = client
       .db("PharmaConnect")
       .collection("sellerAd");
@@ -91,31 +96,31 @@ async function run() {
     app.put("/category/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-     
+
       const update = {
         $set: {
           name: req.body.name,
           image: req.body.image,
         },
       };
-      const result = await categoryCollection.updateOne(query, update);    
+      const result = await categoryCollection.updateOne(query, update);
       res.send(result);
     });
-  // delete category
-  app.delete("/category/:id", async (req, res) => {
-    const id = req.params.id;
-    const query = { _id: new ObjectId(id) };
-    const result = await categoryCollection.deleteOne(query);
-    res.send(result);
-  });
- 
-    
+    // delete category
+    app.delete("/category/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await categoryCollection.deleteOne(query);
+      res.send(result);
+    });
 
-
-
-
-
-
+    // post medicines
+    app.post("/medicines", async (req, res) => {
+      const medicine = req.body;
+      const result = await medicineCollection.insertOne(medicine);
+      res.send(result);
+    });
+   
 
     // admin confirmation for ad
     app.patch("/sellerAdds/admin/:id", async (req, res) => {
