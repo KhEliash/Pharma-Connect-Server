@@ -120,10 +120,10 @@ async function run() {
       const result = await medicineCollection.insertOne(medicine);
       res.send(result);
     });
-     // get medicines by email
-    app.get("/medicines/:email", async (req, res) => {
+     // get medicines by category
+    app.get("/medicines/:category", async (req, res) => {
       // console.log(req.params);
-      const query = { email: req.params.email };
+      const query = { category: req.params.category };
       const medicine = await medicineCollection.find(query).toArray();
       res.send(medicine);
     });
