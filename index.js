@@ -147,6 +147,13 @@ async function run() {
       const result = await cartCollection.insertOne(cart);
       res.send(result);
     });
+    // get cart data by email
+    app.get("/cart/:email", async (req, res) => {
+      // console.log(req.params);
+      const query = { email: req.params.email };
+      const cart = await cartCollection.find(query).toArray();
+      res.send(cart);
+    });
    
  
 
