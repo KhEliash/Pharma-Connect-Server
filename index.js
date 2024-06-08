@@ -31,6 +31,7 @@ async function run() {
     // await client.connect();
 
     const userCollection = client.db("PharmaConnect").collection("users");
+    const cartCollection = client.db("PharmaConnect").collection("cart");
     const medicineCollection = client
       .db("PharmaConnect")
       .collection("medicines");
@@ -127,6 +128,27 @@ async function run() {
       const medicine = await medicineCollection.find(query).toArray();
       res.send(medicine);
     });
+    // get medicines by email
+    app.get("/medicinesSeller/:email", async (req, res) => {
+      // console.log(req.params);
+      const query = { email: req.params.email };
+      const medicine = await medicineCollection.find(query).toArray();
+      res.send(medicine);
+    });
+
+    // post cart data
+    app.post("/cart", async (req, res) => {
+      const cart = req.body;
+      const existingItem = await cartCollection.findOne({ID:req.body.ID})
+      // console.log(existingItem);
+      if(existingItem){
+        return res.send("Item already exists in cart");
+      }
+      const result = await cartCollection.insertOne(cart);
+      res.send(result);
+    });
+   
+ 
 
 
    
@@ -152,7 +174,7 @@ async function run() {
       const query = { _id: new ObjectId(id) };
       const update = {
         $set: {
-          status: "",
+          status: " ",
         },
       };
       const result = await sellerAdCollection.updateOne(query, update);
