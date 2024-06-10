@@ -77,6 +77,13 @@ async function run() {
       res.send(result);
     });
 
+    // get user by email
+    app.get("/users/:email", async (req, res) => {
+      const query = { email: req.params.email };
+      const user = await userCollection.findOne(query);
+      res.send(user);
+    });
+
     // seller advertise data
     app.get("/sellerAdds/:email", async (req, res) => {
       // console.log(req.params);
