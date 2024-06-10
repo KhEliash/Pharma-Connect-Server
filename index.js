@@ -53,6 +53,29 @@ async function run() {
       const result = await userCollection.insertOne(user);
       res.send(result);
     });
+    // get users
+    app.get("/users", async (req, res) => {
+      const users = await userCollection.find().toArray();
+      // console.log(users);
+      res.send(users);
+    });
+    // update users
+    app.patch("/users/:id", async (req, res) => {
+      const id = req.params.id;
+     
+      const user = req.body.role;
+       
+      const filter = { _id: new ObjectId(id) };
+      // console.log(filter);
+      const options = { upsert: true };
+      const update = {
+        $set: {
+          role: user,
+        },
+      };
+      const result = await userCollection.updateOne(filter, update);
+      res.send(result);
+    });
 
     // seller advertise data
     app.get("/sellerAdds/:email", async (req, res) => {
@@ -121,7 +144,7 @@ async function run() {
       const result = await medicineCollection.insertOne(medicine);
       res.send(result);
     });
-     // get medicines by category
+    // get medicines by category
     app.get("/medicines/:category", async (req, res) => {
       // console.log(req.params);
       const query = { category: req.params.category };
@@ -139,9 +162,9 @@ async function run() {
     // post cart data
     app.post("/cart", async (req, res) => {
       const cart = req.body;
-      const existingItem = await cartCollection.findOne({ID:req.body.ID})
+      const existingItem = await cartCollection.findOne({ ID: req.body.ID });
       // console.log(existingItem);
-      if(existingItem){
+      if (existingItem) {
         return res.send("Item already exists in cart");
       }
       const result = await cartCollection.insertOne(cart);
@@ -154,11 +177,6 @@ async function run() {
       const cart = await cartCollection.find(query).toArray();
       res.send(cart);
     });
-   
- 
-
-
-   
 
     // admin confirmation for ad
     app.patch("/sellerAdds/admin/:id", async (req, res) => {
