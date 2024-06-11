@@ -151,6 +151,13 @@ async function run() {
       const result = await medicineCollection.insertOne(medicine);
       res.send(result);
     });
+    // get medicines
+    app.get("/medicines", async (req, res) => {
+      const medicine = await medicineCollection.find().toArray();
+      // console.log(medicine);
+      res.send(medicine);
+    });
+    
     // get medicines by category
     app.get("/medicines/:category", async (req, res) => {
       // console.log(req.params);
