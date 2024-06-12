@@ -7,7 +7,7 @@ const port = process.env.PORT || 5000;
 // Middleware
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173", "https://pharma-connect-b7fd3.web.app"],
     credentials: true,
   })
 );
@@ -62,9 +62,9 @@ async function run() {
     // update users
     app.patch("/users/:id", async (req, res) => {
       const id = req.params.id;
-     
+
       const user = req.body.role;
-       
+
       const filter = { _id: new ObjectId(id) };
       // console.log(filter);
       const options = { upsert: true };
@@ -157,7 +157,7 @@ async function run() {
       // console.log(medicine);
       res.send(medicine);
     });
-    
+
     // get medicines by category
     app.get("/medicines/:category", async (req, res) => {
       // console.log(req.params);
@@ -176,7 +176,8 @@ async function run() {
     // post cart data
     app.post("/cart", async (req, res) => {
       const cart = req.body;
-      const existingItem = await cartCollection.findOne({ ID: req.body.ID });
+      const { ID, email } = cart;
+      const existingItem = await cartCollection.findOne({ ID, email });
       // console.log(existingItem);
       if (existingItem) {
         return res.send("Item already exists in cart");
@@ -190,6 +191,21 @@ async function run() {
       const query = { email: req.params.email };
       const cart = await cartCollection.find(query).toArray();
       res.send(cart);
+    });
+    // delete single cart by email and id
+    app.delete("/cart/:email/:id", async (req, res) => {
+      const { email, id } = req.params;
+      const query = { email: email, _id: new ObjectId(id) };
+      const result = await cartCollection.deleteOne(query);
+
+      res.send(result);
+    });
+    // delete cart by email
+    app.delete("/cart/:email", async (req, res) => {
+      // console.log(req.params);
+      const query = { email: req.params.email };
+      const result = await cartCollection.deleteMany(query);
+      res.send(result);
     });
 
     // admin confirmation for ad
